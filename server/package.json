@@ -22,5 +22,5 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.5.0"
   },
-  "homepage": "https://tahmid-sarker.github.io/job-hunt/"
+  "homepage": "https://job-hunt-sync.web.app"
 }
