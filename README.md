@@ -1,6 +1,7 @@
 # Job Hunt (Job Management)
 
-- [**View Live**](https://tahmid-sarker.github.io/job-hunt/)
+- [**Client Live (Firebase)**](https://job-hunt-sync.web.app)
+- [**API Live (Vercel)**](https://job-hunt-sync.vercel.app)
 
 Job Hunt is a job management web application that helps users find, apply for, and manage job opportunities, while enabling employers to post and manage job listings. The platform is designed for both job seekers and employers, providing a seamless and secure experience.
 
@@ -34,7 +35,7 @@ Job Hunt is a job management web application that helps users find, apply for, a
 | HTTP Client    | Axios                               |
 | Backend        | Express, MongoDB                    |
 | Auth & Hosting | Firebase (Auth + Hosting), JWT      |
-| Deployment     | GitHub Pages (client) + Vercel (API) |
+| Deployment     | Firebase Hosting (client) + Vercel (API) |
 
 ## Routing Overview
 
