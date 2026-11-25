@@ -281,34 +281,49 @@ app.post('/contact-message', async (req, res) => {
 });
 
 // Get all contact messages (Read)
-app.get('/contact-messages', VerifyJWTToken, async (req, res) => {
+app.get('/contact-messages', VerifyJWTToken, verifyAdmin, async (req, res) => {
   const result = await messageCollection.find().sort({ date: -1 }).toArray();
   res.send(result);
 });
 
 // Delete a contact message (Delete)
-app.delete('/contact-messages/:id', VerifyJWTToken, async (req, res) => {
+app.delete('/contact-messages/:id', VerifyJWTToken, verifyAdmin, async (req, res) => {
   const id = req.params.id;
   const result = await messageCollection.deleteOne({ _id: new ObjectId(id) });
   res.send(result);
 });
 
+async function verifyAdmin(req, res, next) {
+  const email = req.decode?.email;
+  const me = email ? await userCollection.findOne({ email }) : null;
+  if (me?.role !== "admin") {
+    return res.status(403).send({ message: "Forbidden Access" });
+  }
+  req.currentUser = me;
+  next();
+}
+
+async function listUsersForRequester(req, res) {
+  const me = await userCollection.findOne({ email: req.decode?.email });
+  if (me?.role === "admin") {
+    return res.send(await userCollection.find().toArray());
+  }
+  res.send(me ? [me] : []);
+}
+
 //ADMIN DASHBOARD:
 // Get all users
-app.get("/users", VerifyJWTToken, async (req, res) => {
-  const users = await userCollection.find().toArray();
-  res.send(users);
-});
+app.get("/users", VerifyJWTToken, listUsersForRequester);
 
 // Promote user to admin (Update)
-app.patch("/users/:id/promote", VerifyJWTToken, async (req, res) => {
+app.patch("/users/:id/promote", VerifyJWTToken, verifyAdmin, async (req, res) => {
   const { id } = req.params;
   const result = await userCollection.updateOne({ _id: new ObjectId(id) }, { $set: { role: "admin" } });
   res.send(result);
 });
 
 // Delete a user (Delete)
-app.delete("/users/:id", VerifyJWTToken, async (req, res) => {
+app.delete("/users/:id", VerifyJWTToken, verifyAdmin, async (req, res) => {
   const { id } = req.params;
   const result = await userCollection.deleteOne({ _id: new ObjectId(id) });
   res.send(result);
